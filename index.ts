@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { appConfig } from './src/constants';
 import { sequelizeDB } from './src/db';
+import { router } from './src/api/routes';
 
 const PORT = appConfig.port;
 
@@ -11,6 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use('/api', router);
 
 const start = async (): Promise<void> => {
   try {
