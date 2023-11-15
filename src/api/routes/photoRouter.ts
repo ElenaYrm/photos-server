@@ -1,9 +1,8 @@
 import express from 'express';
+import { PhotoController } from '../controllers';
 
 const photoRouter = express.Router();
 
-photoRouter.get('/', (req, res) => {
-  res.status(200).json({ message: 'Get photos' });
-});
+photoRouter.get('/', PhotoController.getAll);
 
 export { photoRouter };

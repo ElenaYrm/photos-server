@@ -1,17 +1,9 @@
 import express from 'express';
+import { CommentsController } from '../controllers';
 
 const commentsRouter = express.Router();
 
-commentsRouter.post('/', (req, res) => {
-  res.status(200).json({ message: 'Create new comment' });
-});
-commentsRouter
-  .route('/:id')
-  .put((req, res) => {
-    res.status(200).json({ message: 'Update comment by id' });
-  })
-  .delete((req, res) => {
-    res.status(200).json({ message: 'Delete comment by id' });
-  });
+commentsRouter.post('/', CommentsController.create);
+commentsRouter.route('/:id').put(CommentsController.update).delete(CommentsController.delete);
 
 export { commentsRouter };
