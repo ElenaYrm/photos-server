@@ -1,17 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
+import CommentsService from '../services/commentsService';
 
 class CommentsController {
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      res.status(200).json({ message: 'Create new comment' });
-    } catch (error) {
-      next(error);
-    }
-  }
+      const commentData = req.body;
+      const newComment = await CommentsService.create(commentData);
 
-  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      res.status(200).json({ message: `Update comment by id: ${req.params.id}` });
+      res.status(201).json(newComment);
     } catch (error) {
       next(error);
     }
@@ -19,7 +15,10 @@ class CommentsController {
 
   async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      res.status(200).json({ message: `Delete comment by id: ${req.params.id}` });
+      const id = req.params.id;
+      const deletedComment = await CommentsService.delete(+id);
+
+      res.status(200).json({ message: `Comment with id ${deletedComment} was successfully deleted` });
     } catch (error) {
       next(error);
     }
