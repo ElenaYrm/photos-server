@@ -1,10 +1,8 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 import { sequelizeDB } from '../index';
+import { IUserData } from '../../types/interfaces';
 
-interface IUserModel extends Model<InferAttributes<IUserModel>, InferCreationAttributes<IUserModel>> {
-  email: string;
-  password: string;
-  user_name: string;
+export interface IUserModel extends IUserData, Model<InferAttributes<IUserModel>, InferCreationAttributes<IUserModel>> {
   id: CreationOptional<number>;
 }
 
