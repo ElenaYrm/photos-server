@@ -10,5 +10,5 @@ export const UserModel = sequelizeDB.define<IUserModel>('user', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   email: { type: DataTypes.STRING(30), unique: true, allowNull: false },
   password: { type: DataTypes.STRING, allowNull: false },
-  user_name: { type: DataTypes.STRING(30), allowNull: false },
+  username: { type: DataTypes.STRING(30), allowNull: false, unique: true },
 });

@@ -1,20 +1,19 @@
 import bcrypt from 'bcrypt';
-import { ITokens, IUserData } from '../../types/interfaces';
+import { ILoginResult, ITokens, IUserData } from '../../types/interfaces';
 import { UserModel } from '../../db/models';
 import { ApiError } from '../../error';
 import TokenService from './tokenService';
-import { IUserModel } from '../../db/models/userModel';
-import tokenService from './tokenService';
-
-interface ILoginResult extends ITokens {
-  user: IUserModel;
-}
 
 class UserService {
   async signup(newUser: IUserData): Promise<ILoginResult> {
     const existsUser = await UserModel.findOne({ where: { email: newUser.email } });
     if (existsUser) {
       throw ApiError.BadRequest('User with provided email is exist');
+    }
+
+    const existsUsername = await UserModel.findOne({ where: { username: newUser.username } });
+    if (existsUsername) {
+      throw ApiError.BadRequest('User with provided username is exist');
     }
 
     const hashedPassword = await bcrypt.hash(newUser.password, 10);
@@ -42,7 +41,7 @@ class UserService {
   async refresh(refreshToken: string): Promise<ILoginResult> {
     if (!refreshToken) throw ApiError.UnauthorizedError();
 
-    const userData = tokenService.validateRefreshToken(refreshToken);
+    const userData = TokenService.validateRefreshToken(refreshToken);
     if (!userData) throw ApiError.UnauthorizedError();
 
     const user = await UserModel.findByPk(userData.id);

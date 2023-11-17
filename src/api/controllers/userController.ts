@@ -3,6 +3,7 @@ import { validationResult } from 'express-validator';
 import UserService from '../services/userService';
 import { refreshCookie, refreshExpire } from '../../constants';
 import { ApiError } from '../../error';
+import { UserDto } from '../dtos/userDto';
 
 class UserController {
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -13,9 +14,10 @@ class UserController {
       }
 
       const newUser = await UserService.signup(req.body);
+      const response = new UserDto(newUser).getUser();
 
       res.cookie(refreshCookie, newUser.refreshToken, { maxAge: refreshExpire, httpOnly: true });
-      res.status(201).json(newUser);
+      res.status(201).json(response);
     } catch (error) {
       next(error);
     }
@@ -30,9 +32,10 @@ class UserController {
 
       const { email, password } = req.body;
       const user = await UserService.login(email, password);
+      const response = new UserDto(user).getUser();
 
       res.cookie(refreshCookie, user.refreshToken, { maxAge: refreshExpire, httpOnly: true });
-      res.status(200).json(user);
+      res.status(200).json(response);
     } catch (error) {
       next(error);
     }
@@ -49,19 +52,12 @@ class UserController {
 
   async refresh(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { refreshToken } = req.cookies;
+      const refreshToken = req.cookies.refreshToken;
       const user = await UserService.refresh(refreshToken);
+      const response = new UserDto(user).getUser();
 
       res.cookie(refreshCookie, user.refreshToken, { maxAge: refreshExpire, httpOnly: true });
-      res.status(200).json(user);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async get(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      res.send(`Get User With ID ${req.params.id}`);
+      res.status(200).json(response);
     } catch (error) {
       next(error);
     }

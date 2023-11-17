@@ -6,7 +6,7 @@ class PhotoController {
     try {
       const photos = await PhotoService.getAll();
 
-      res.status(200).json({ photos });
+      res.status(200).json(photos);
     } catch (error) {
       next(error);
     }

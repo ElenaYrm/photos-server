@@ -8,7 +8,7 @@ authRouter.post(
   '/signup',
   body('email').isEmail(),
   body('password').isLength({ min: 8 }),
-  body('user_name').notEmpty(),
+  body('username').notEmpty(),
   UserController.signup,
 );
 authRouter.post('/login', body('email').isEmail(), body('password').isLength({ min: 8 }), UserController.login);

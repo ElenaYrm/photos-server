@@ -1,5 +1,6 @@
 import { CommentsModel, ICommentsModel } from '../../db/models/commentsModel';
 import { ApiError } from '../../error';
+import { UserModel } from '../../db/models';
 
 interface INewComment {
   userId: number;
@@ -8,6 +9,17 @@ interface INewComment {
 }
 
 class CommentsService {
+  async getByPhotoId(id: number): Promise<ICommentsModel[]> {
+    return await CommentsModel.findAll({
+      where: { photoId: id },
+      include: [
+        {
+          model: UserModel,
+        },
+      ],
+    });
+  }
+
   async create(data: INewComment): Promise<ICommentsModel> {
     return await CommentsModel.create(data);
   }
